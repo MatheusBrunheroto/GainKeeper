@@ -49,11 +49,12 @@ def read_json():
     
     try:
         
-        with open("dict.json") as f:
+        with open("data2.json") as f:
             raw = f.read()
             
         if raw:
-            DATA = json.loads(raw) # pra finalizar é json.dumps
+            
+            DATA = json.loads(raw)
             # DUPLICA PRO BACKUP
             
             # Create Instances #
@@ -61,12 +62,12 @@ def read_json():
             for name in DATA["names"]: 
                 item = Item(name, DATA["names"][name])
                 items.append(item)
-            return items
+            return items    # Returns to Main()
 
 
         else:
             # PRIMEIRA VEZ, adiciona dicionario vazio
-            print("The \"dict.json\" file is empty!")
+            print("The \"data.json\" file is empty!")
             
         # transofmra em objeto
         
@@ -76,15 +77,33 @@ def read_json():
         print(f"Failed to find \"dict.json\"! ({e})...")
         # CRIA SE NAO EXISTIR
         sys.exit("\"dict.json\" was created!")
-def write_json():
-    return 1
+        
+        
+        # by now data2 is writing in data
+def write_json(items):
+    
+    # Creates the New Dictionary #
+    dictionary = {"names": {}}
+    for item in items:
+        dictionary["names"][item.name] = {
+            "purchases": [
+                {"price": price, "amount": amount}
+                for price, amount in item.purchase_prices
+            ],
+            "sales": [
+                {"price": price, "amount": amount}
+                for price, amount in item.sale_prices
+            ]
+        }
+        
+    # Write the new data in data.json, in the same way it was read before
+    with open("data.json", "w", encoding="utf-8") as file:
+        json.dump(dictionary, file, indent=4, separators=(",", ": "), ensure_ascii=False)
+    
     
    
    
-
-
-
-
+class Item:
     
     # Converting the dictionary entry into an object, with easily accessible attributes for purchases, sales, and financial metrics #
     def __init__(self, name: str, data: dict):
@@ -180,9 +199,16 @@ def write_json():
         self._update_financial_metrics()
         
         
+        
+        
+        
 
 def menu():
     return 1
+        
+        
+        
+        
         
         
 if __name__ == "__main__":
@@ -204,6 +230,6 @@ if __name__ == "__main__":
         print(f"  Estimated Profit: {item.taxed_estimated_profit}")
         print(f"  Estimated ROI: {item.estimated_ROI:.2f}%")
         print("-" * 40)
-   
-   
+        
+    write_json(items)
    # fazer um arquivo com a data que itens foram adicionados, lucro, etc... pra fazer o grafico

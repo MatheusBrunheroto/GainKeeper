@@ -1,0 +1,48 @@
+{
+    "names": {
+        "Austin 2025 Legends Sticker Capsule": {
+            "purchases": [
+                {
+                    "price": 1.45,
+                    "amount": 40
+                },
+                {
+                    "price": 2.4,
+                    "amount": 10
+                }
+            ],
+            "sales": [
+                {
+                    "price": 3.19,
+                    "amount": 10
+                },
+                {
+                    "price": 2.24,
+                    "amount": 16
+                }
+            ]
+        },
+        "Complexity Gaming (Holo) | Austin 2025": {
+            "purchases": [
+                {
+                    "price": 45.63,
+                    "amount": 1
+                },
+                {
+                    "price": 42.21,
+                    "amount": 1
+                },
+                {
+                    "price": 42.63,
+                    "amount": 1
+                }
+            ],
+            "sales": [
+                {
+                    "price": 119.68,
+                    "amount": 1
+                }
+            ]
+        }
+    }
+}
