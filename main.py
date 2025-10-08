@@ -128,53 +128,56 @@ class Item:
         self.purchase_prices = []          
         self.total_purchase_price = 0       
         self.total_purchase_amount = 0
+        self.average_purchase_price = 0
+        
+        self.sale_prices = []
+        self.total_sale_price = 0
+        self.total_sale_amount = 0
+        self.average_sale_price = 0
+        
+        self.remaining_amount = 0
+        self.estimated_profit = 0
+        self.taxed_estimated_profit = 0
+        self.estimated_ROI = 0
+        
         
         purchase = data["purchases"]
         for p in purchase:
             self.purchase_prices.append([p["price"], p["amount"]])
             self.total_purchase_price += p["price"] * p["amount"]
-            self.total_purchase_amount += p["amount"]
-            
-        self.average_purchase_price = 0
+            self.total_purchase_amount += p["amount"]        
         if self.total_purchase_amount > 0:  # Avoid division by 0
             self.average_purchase_price = self.total_purchase_price / self.total_purchase_amount
 
-
         ## Repeat the exact same proccess, but for sales ##
-        self.sale_prices = []
-        self.total_sale_price = 0
-        self.total_sale_amount = 0
-        
         sale = data["sales"]
         for s in sale:
             self.sale_prices.append([s["price"], s["amount"]])
             self.total_sale_price += s["price"] * s["amount"]
             self.total_sale_amount += s["amount"]    
-        
-        self.average_sale_price = 0
         if self.total_sale_amount > 0: 
             self.average_sale_price = self.total_sale_price / self.total_sale_amount
 
-        # Stock #
-        self.remaining_amount = self.total_purchase_amount - self.total_sale_amount
-        # price from remaining stock
-        
-        
-        # Financial Performance Metrics # 
-        self.estimated_profit = self.total_sale_price - (self.average_purchase_price * self.total_sale_amount)
-        self.taxed_estimated_profit = (self.total_sale_price * 0.98) - (self.average_purchase_price * self.total_sale_amount)
-        
-        self.estimated_ROI = self.taxed_estimated_profit * 100 / self.total_purchase_price    # Return on Investment 
 
-        # worst case profit
-        # real profit, se ESTOQUE ACABOU
-
+        self._update_financial_metrics()
+        
+        
 
     def potential_profit(self, current_price):
         return 1
     
-    def _financial_metrics(self):
-        return 1
+    
+    
+    def _update_financial_metrics(self):
+
+        # Stock # RISCO DE ALGUEM COLOCAR SALE > AMOUNT, corrigir isso no record_sale, na hora de verificar o total sale amount
+        self.remaining_amount = self.total_purchase_amount - self.total_sale_amount
+        
+        # Financial Performance Metrics # 
+        self.estimated_profit = self.total_sale_price - (self.average_purchase_price * self.total_sale_amount)
+        self.taxed_estimated_profit = (self.total_sale_price * 0.98) - (self.average_purchase_price * self.total_sale_amount)
+        self.estimated_ROI = self.taxed_estimated_profit * 100 / self.total_purchase_price
+    
     
     # Searches if the price already exists; if so, its amount is increased. Otherwise, a new price entry is added with the given amount. 
     def record_purchase(self, price, amount):
@@ -186,7 +189,13 @@ class Item:
                 break
         if price_found == False:
             self.purchase_prices.append([price, amount])
-
+        
+        # Recalculates important data #
+        self.total_purchase_price += price * amount
+        self.total_purchase_amount += amount
+        self.average_purchase_price = self.total_purchase_price / self.total_purchase_amount
+        self._update_financial_metrics()
+        
     def record_sale(self, price, amount):
         price_found = False
         for i in range(len(self.sale_prices)):
@@ -196,8 +205,13 @@ class Item:
                 break
         if price_found == False:
             self.sale_prices.append([price, amount])
+            
+        self.total_sale_price += price * amount
+        self.total_sale_amount += amount
+        self.average_sale_price = self.total_sale_price / self.total_sale_amount
+        self._update_financial_metrics()
         
-    # COMO O CODIGO PODE MUDAR, MEDIDORES DEVEM SER RECALCULADOS APOS CADA ADIÇÃO DE COMPRA OU VENDA, ENTAO O TRECHO FINAL DO CONSTRUTOR DEVE SER CORRIGIDO
+        
 
 def menu():
     return 1
