@@ -54,7 +54,6 @@ def read_json():
             
         if raw:
             DATA = json.loads(raw) # pra finalizar é json.dumps
-            print(DATA["names"]["Austin 2025 Legends Sticker Capsule"]["purchases"][0]["amount"])
             # DUPLICA PRO BACKUP
             
             # Create Instances #
@@ -85,60 +84,29 @@ def write_json():
 
 
 
-"""
-Every instance of the object "Item" has these variables:
 
-    - name
-    
-    ## Purchase Variables ##
-    - purchase_prices[N][{Price, Amount}]
-    - total_purchase_price              # total_purchase_price += purchase_prices[0 .. N][0] * purchase_prices[0 .. N][1]   
-    - total_purchase_amount             # total_purchase_amount += purchase_prices[0 .. N][1]
-    - average_purchase_price            # average_purchase_price = total_purchase_price / total_purchase_amount
-    
-    ## Sale Variables (Same Idea from the Purchase Variables) ## 
-    - sale_prices[N][{Price, Amount}]
-    - total_sale_price
-    - total_sale_amount
-    - average_sale_price
-    
-    ## Stock Variables ##
-    - remaining_amount                  # remaining_amount = total_purchase_amount - total_sale_amount
-    
-    ## Financial Metrics ## 
-    - estimated_profit                               # estimated_profit = total_sale_price - (average_purchase_price * total_sale_amount)
-    - taxed_estimated_profit                         # taxed_estimated_profit = (total_sale_price * 0.98) - (average_purchase_price * total_sale_amount)
-    - estimated_ROI -> (Return Of Investment)        # estimated_ROI = taxed_estimated_profit * 100 / total_purchase_price
-    - worst_case_profit
-    
-Every instance of the object "Item" has these methods:
-
-    - potential_profit(current_price)
-    - add_purchase(price, amount)
-    - add_sale(price, amount)
-     
-"""
-class Item:
     
     # Converting the dictionary entry into an object, with easily accessible attributes for purchases, sales, and financial metrics #
     def __init__(self, name: str, data: dict):
         
         self.name = name
- 
-        self.purchase_prices = []          
-        self.total_purchase_price = 0       
-        self.total_purchase_amount = 0
-        self.average_purchase_price = 0
         
-        self.sale_prices = []
+        ## Purchase Variables ##
+        self.purchase_prices = []                    # purchase_prices[N][{Price, Amount}]
+        self.total_purchase_price = 0                # total_purchase_price += purchase_prices[0 .. N][0] * purchase_prices[0 .. N][1
+        self.total_purchase_amount = 0               # total_purchase_amount += purchase_prices[0 .. N][1]
+        self.average_purchase_price = 0              # average_purchase_price = total_purchase_price / total_purchase_amoun
+        
+        ## Sale Variables (Same Idea from the Purchase Variables) ## 
+        self.sale_prices = []                        # sale_prices[N][{Price, Amount}]
         self.total_sale_price = 0
         self.total_sale_amount = 0
         self.average_sale_price = 0
         
         self.remaining_amount = 0
-        self.estimated_profit = 0
-        self.taxed_estimated_profit = 0
-        self.estimated_ROI = 0
+        self.estimated_profit = 0                    # estimated_profit = total_sale_price - (average_purchase_price * total_sale_amount)
+        self.taxed_estimated_profit = 0              # taxed_estimated_profit = (total_sale_price * 0.98) - (average_purchase_price * total_sale_amount)
+        self.estimated_ROI = 0                       # estimated_ROI = taxed_estimated_profit * 100 / total_purchase_price
         
         
         purchase = data["purchases"]
