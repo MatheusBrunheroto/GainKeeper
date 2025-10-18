@@ -1,5 +1,6 @@
 import json
 import sys
+from interface import App
 
 
 """
@@ -54,6 +55,8 @@ def read_json():
             
         if raw:
             
+            with open("backup_data.json", "w", encoding="utf-8") as file:
+                file.write("x")
             DATA = json.loads(raw)
             # DUPLICA PRO BACKUP
             
@@ -165,9 +168,11 @@ class Item:
         self.taxed_estimated_profit = (self.total_sale_price * 0.98) - (self.average_purchase_price * self.total_sale_amount)
         self.estimated_ROI = self.taxed_estimated_profit * 100 / self.total_purchase_price
     
+
     
     # Searches if the price already exists; if so, its amount is increased. Otherwise, a new price entry is added with the given amount. 
     def record_purchase(self, price, amount):
+        
         price_found = False
         for i in range(len(self.purchase_prices)):
             if self.purchase_prices[i][0] == price:
@@ -182,8 +187,15 @@ class Item:
         self.total_purchase_amount += amount
         self.average_purchase_price = self.total_purchase_price / self.total_purchase_amount
         self._update_financial_metrics()
-        
+    
+    
+    # Same idea as record_purchase()
     def record_sale(self, price, amount):
+        
+        # Avoiding negative stock
+        if amount > remaining_amount:
+            return f"Specified amount ({amount}x) is higher than your stock ({remaining_amount}x)!"
+            
         price_found = False
         for i in range(len(self.sale_prices)):
             if self.sale_prices[i][0] == price:
@@ -198,7 +210,10 @@ class Item:
         self.average_sale_price = self.total_sale_price / self.total_sale_amount
         self._update_financial_metrics()
         
-        
+        if amount == 1:
+            return f"Successfully recorded sale: {amount} unit of \"{self.name}\" at ${price:.2f}. Updated total sold: {self.total_sale_amount} units."
+        else:
+            return f"Successfully recorded sale: {amount} units of \"{self.name}\" at ${price:.2f} each. Updated total sold: {self.total_sale_amount} units."
         
         
         
@@ -214,22 +229,35 @@ def menu():
 if __name__ == "__main__":
     
     items = read_json()
-  
+    
+    """ It's mandatory to have the "items" defined before calling App(), because it could be an empty value and
+        mess up the "SELECT ITEM" option, because it uses "values=[item.name for item in self.items]", and
+        if there is no object with parameter "name", it won't work """
+        # É MESMO? talvez definir lista dict com try e except
+        
+        # A CADA ADIÇÃO EU TERIA QUE LER A LISTA AO VIVO PRA MANTER LÁ, 
+    if items:
+
+        app = App(items)
+        app.mainloop()
+
     # menu
     # após tudo, deve ser criado um novo dicionario, com os novos objetos, processo reverso
     
-    print("=== Financial Overview ===")
-    for item in items:
-        print(f"Item: {item.name}")
-        print(f"item {item.purchase_prices[0]}")
-        print(f"  Total Purchased: {item.total_purchase_amount} units for {item.total_purchase_price}")
-        print(f"  Total Sold: {item.total_sale_amount} units for {item.total_sale_price}")
-        print(f"  Remaining Units: {item.remaining_amount}")
-        print(f"  Average Purchase Price: {item.average_purchase_price}")
-        print(f"  Average Sale Price: {item.average_sale_price}")
-        print(f"  Estimated Profit: {item.taxed_estimated_profit}")
-        print(f"  Estimated ROI: {item.estimated_ROI:.2f}%")
-        print("-" * 40)
+    """    print("=== Financial Overview ===")
+        for item in items:
+            print(f"Item: {item.name}")
+            print(f"item {item.purchase_prices[0]}")
+            print(f"  Total Purchased: {item.total_purchase_amount} units for {item.total_purchase_price}")
+            print(f"  Total Sold: {item.total_sale_amount} units for {item.total_sale_price}")
+            print(f"  Remaining Units: {item.remaining_amount}")
+            print(f"  Average Purchase Price: {item.average_purchase_price}")
+            print(f"  Average Sale Price: {item.average_sale_price}")
+            print(f"  Estimated Profit: {item.taxed_estimated_profit}")
+            print(f"  Estimated ROI: {item.estimated_ROI:.2f}%")
+            print("-" * 40)"""
         
     write_json(items)
+
+
    # fazer um arquivo com a data que itens foram adicionados, lucro, etc... pra fazer o grafico
