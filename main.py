@@ -1,8 +1,8 @@
 import json
 import sys
-from interface import App
+from interface import App, TransactionRecorder
 
-
+# FAZER UM CONFIG FILE PRA SALVAR PREFERENCIAS, LER ELE ANTES TAMBEM
 """
 The dict.json file is structured in the following way:
 
