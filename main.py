@@ -47,7 +47,7 @@ dict["names"] -> "First Item Name":{"purchases": [{...}, {...}], "sales": [{...}
     ...
 """
         
-        
+        # FILTRAR O IS ACTIVE NO INTERFACE, PRA A PARECER OU NAO. CRIAR UM LUGAR COM UMA LISTA DOS ITEM NAO ATIVOS, USAR ELES NO GRAFICO MESMO ASSIM
 if __name__ == "__main__":
     
     data_manager = DataManager()
@@ -59,13 +59,14 @@ if __name__ == "__main__":
         # É MESMO? talvez definir lista dict com try e except
         
         # A CADA ADIÇÃO EU TERIA QUE LER A LISTA AO VIVO PRA MANTER LÁ, 
-    if items:
 
-        app = App(items)
-        app.mainloop()
+    app = App(items)
+    app.mainloop()
 
     for item in items:
         print(item.name)
+        
+    items = [item for item in items if item.name != "placeholder"]   # Remove placeholder in a data.json that was inexistent or empty
     data_manager.write_json(items)
 
 

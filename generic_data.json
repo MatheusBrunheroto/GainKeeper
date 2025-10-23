@@ -3,7 +3,8 @@
         "placeholder":{
             "purchases": [{"amount": 0, "price": 0, "currency": 0}],
             "sales": [{"amount": 0, "price": 0, "currency" : 0}],
-            "is_active" : 0
+            "is_active" : 0,
+            "current_price" : 0
         }
     }
 }
