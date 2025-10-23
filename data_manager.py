@@ -61,13 +61,14 @@ class DataManager:
         for item in items:
             dictionary["names"][item.name] = {
                 "purchases": [
-                    {"price": price, "amount": amount}
-                    for price, amount in item.purchase_prices
+                {"price": price, "amount": amount, "currency": currency}
+                    for price, amount, currency in item.purchase_prices
                 ],
                 "sales": [
-                    {"price": price, "amount": amount}
-                    for price, amount in item.sale_prices
-                ]
+                    {"price": price, "amount": amount, "currency": currency}
+                    for price, amount, currency in item.sale_prices
+                ],
+                "is_active": item.is_active
             }
             
         # Write the new data in data.json, in the same way it was read before

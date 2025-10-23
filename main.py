@@ -46,18 +46,6 @@ dict["names"] -> "First Item Name":{"purchases": [{...}, {...}], "sales": [{...}
     -   -   dict["names"]["Second Item Name"]["purchases"][2]["price"] -> PRICE3
     ...
 """
-
-
-    
-   
-   
-
-        
-
-
-        
-        
-        
         
         
 if __name__ == "__main__":
@@ -76,21 +64,6 @@ if __name__ == "__main__":
         app = App(items)
         app.mainloop()
 
-    # menu
-    # após tudo, deve ser criado um novo dicionario, com os novos objetos, processo reverso
-    
-    """    print("=== Financial Overview ===")
-        for item in items:
-            print(f"Item: {item.name}")
-            print(f"item {item.purchase_prices[0]}")
-            print(f"  Total Purchased: {item.total_purchase_amount} units for {item.total_purchase_price}")
-            print(f"  Total Sold: {item.total_sale_amount} units for {item.total_sale_price}")
-            print(f"  Remaining Units: {item.remaining_amount}")
-            print(f"  Average Purchase Price: {item.average_purchase_price}")
-            print(f"  Average Sale Price: {item.average_sale_price}")
-            print(f"  Estimated Profit: {item.taxed_estimated_profit}")
-            print(f"  Estimated ROI: {item.estimated_ROI:.2f}%")
-            print("-" * 40)"""
     for item in items:
         print(item.name)
     data_manager.write_json(items)

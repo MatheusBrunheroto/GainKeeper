@@ -105,11 +105,11 @@ class ItemRegisterer:
                 self.text_output.insert("end", f"\n-> {name} is already registered!")
                 return
             
-        new_item = Item(name, {'purchases': [{'price': 0, 'amount': 0}],'sales': [{'price': 0, 'amount': 0}]})
+        new_item = Item(name, {'purchases': [{'price': 0, 'amount': 0, 'currency': 0}],'sales': [{'price': 0, 'amount': 0, 'currency': 0}],'is_active': 0})
         self.items.append(new_item)
         self.transaction_recorder.entry_item.configure(values=[item.name for item in self.items])
 
-
+# CRIAR O OBJETO STOCK QUE VAI GUARDAR DADOS GERAIS
 
 
 class TransactionRecorder:

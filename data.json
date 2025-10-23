@@ -4,15 +4,45 @@
             "purchases": [
                 {
                     "price": 0,
-                    "amount": 0
+                    "amount": 0,
+                    "currency": 0
                 }
             ],
             "sales": [
                 {
                     "price": 0,
-                    "amount": 0
+                    "amount": 0,
+                    "currency": 0
                 }
-            ]
+            ],
+            "is_active": 0
+        },
+        "te": {
+            "purchases": [
+                {
+                    "price": 1.0,
+                    "amount": 3,
+                    "currency": "USD"
+                },
+                {
+                    "price": 3.0,
+                    "amount": 2,
+                    "currency": "USD"
+                },
+                {
+                    "price": 2.0,
+                    "amount": 2,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [
+                {
+                    "price": 1.0,
+                    "amount": 1,
+                    "currency": "USD"
+                }
+            ],
+            "is_active": 0
         }
     }
 }
