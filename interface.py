@@ -1,5 +1,5 @@
 import customtkinter as ctk
-
+from item import Item
 # Configuração inicial da janela
 ctk.set_appearance_mode("dark")      # "light", "dark", ou "system"
 ctk.set_default_color_theme("dark-blue")  # "blue", "green", "dark-blue"
@@ -30,7 +30,6 @@ class App(ctk.CTk):
         self.left_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.left_frame.grid(row=0, column=0, padx=10, pady=10, sticky="n")
         # ====== FRAMES ESQUERDA ====== #
-        self._register_item(self.left_frame)
         
         
 
@@ -39,7 +38,7 @@ class App(ctk.CTk):
 
         # ====== FRAME DIREITO (LOG / OUTPUT) ====== #
         self.right_frame = ctk.CTkFrame(self.main_frame)
-        self.right_frame.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
+        self.right_frame.grid(row=0, column=1, padx=20, pady=20, sticky="nsew",)
     
 
         self.label_log = ctk.CTkLabel(
@@ -54,20 +53,12 @@ class App(ctk.CTk):
         self.text_output.insert("0.0", "Log initialized...\n")
         
         
+        self.item_registerer = ItemRegisterer(self.left_frame, self.items, self.text_output)
         
         self.transaction_recorder = TransactionRecorder(self.left_frame, self.items, self.text_output)
-
+        # Reference of "transaction_recorder" inside of "item_registerer", so "item_registerer" can update the list in "transaction_recorder"
+        self.item_registerer.transaction_recorder = self.transaction_recorder
      
-    def _register_item(self, parent):
-        
-        # Frame Configuration
-        
-        self.register_frame = ctk.CTkFrame(parent)   # Inherits from main_frame
-        self.register_frame.pack(padx=10, pady=(0, 10), fill="x")
-
-        # Subtitle
-        label_register = ctk.CTkLabel(self.register_frame, text="Register New Item", font=("Arial", 18, "bold"))
-        label_register.grid(row=0, column=0, sticky="w", padx=10, pady=5)
 
     def clear_log(self):
         self.text_output.delete("0.0", "end")
@@ -75,6 +66,48 @@ class App(ctk.CTk):
 
 
 
+
+class ItemRegisterer:
+    
+    def __init__(self, parent, items, text_output):
+        self.parent = parent
+        self.items = items
+        self.text_output = text_output
+        
+        # Used to "ping" TransactionRecorder when a new item is added, updating the selection list in real time
+        self.transaction_recorder = None
+        
+        self._register_item()
+        
+    def _register_item(self):
+
+        # Frame Configuration
+        self.register_frame = ctk.CTkFrame(self.parent)   # Inherits from main_frame
+        self.register_frame.pack(padx=10, pady=(0, 10), fill="x")
+        self.register_frame.columnconfigure(0, weight=1)
+        
+        # Subtitle
+        label_register = ctk.CTkLabel(self.register_frame, text="Register New Item", font=("Arial", 18, "bold"))
+        label_register.grid(row=0, column=0, sticky="w", padx=10, pady=5)
+        self.entry_name = ctk.CTkEntry(self.register_frame, placeholder_text="Name")
+        self.entry_name.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
+
+        self.btn_new_item = ctk.CTkButton(self.register_frame, text="Add Item", command=self._add_item)
+        self.btn_new_item.grid(row=1, column=2, padx=10, pady=5, sticky="ew")
+
+
+    def _add_item(self):
+
+        name = self.entry_name.get()
+        name = name.strip()
+        for item in self.items:
+            if item.name == name:
+                self.text_output.insert("end", f"\n-> {name} is already registered!")
+                return
+            
+        new_item = Item(name, {'purchases': [{'price': 0, 'amount': 0}],'sales': [{'price': 0, 'amount': 0}]})
+        self.items.append(new_item)
+        self.transaction_recorder.entry_item.configure(values=[item.name for item in self.items])
 
 
 
@@ -128,76 +161,81 @@ class TransactionRecorder:
         self.radio_usd.grid(row=1, column=0, padx=(10, 5), pady=0, sticky="e") 
         self.radio_rmb.grid(row=1, column=1, padx=5, pady=0, sticky="e")
         self.radio_brl.grid(row=1, column=2, padx=5, pady=0, sticky="e")
-    
+     
+     
+    # The function _verify_input(), handles the cases that don't depend on item.variables
     def _verify_input(self, item, price, amount):
         
+        # Verify if everything was correctly written / selected
         if not item or not price or not amount:
-            self.text_output.insert("end", "\n-> Missing fields for purchase entry!")
-            return False, None
+            self.text_output.insert("end", "\n-> Missing fields for entry!")
+            return False, None, None
         if item == "Select Registered Item":
             self.text_output.insert("end", "\n-> No item selected!")
-            return False, None
+            return False, None, None
         
-        # Eliminate strings        
+        # Eliminate unexpected values
         try:
             price = price.replace(",", ".")
             price = float(price)
         except:
             self.text_output.insert("end", "\n-> Inserted Price is not a number!")
-            return False, None
+            return False, None, None
         try:
-            amount = float(amount)
+            amount = int(amount)
         except:
-            self.text_output.insert("end", "\n-> Inserted Amount is not a number!")
-            return False, None
+            self.text_output.insert("end", "\n-> Inserted Amount is not an integer!")
+            return False, None, None
         
-        # Eliminate float for amount
-        if amount.is_integer() == False:
-            self.text_output.insert("end", "\n-> Inserted Amount is a float!")
-            return False, None
-
+        # Avoid zeros going into the .json
+        if price == 0:
+            self.text_output.insert("end", "\n-> Inserted Price is 0")
+            return False, None, None
+        if amount == 0:
+            self.text_output.insert("end", "\n-> Inserted Amount is 0")
+            return False, None, None
+        
         # Return normalized price (2 -> 2.00, 2,00 -> 2.00)
-        return True, price
-
-    def _get_currency(self):
-        currency = self.currency_var.get()
-        if currency == "USD":
-            return '$'
-        elif currency == "RMB":
-            return '¥'
-        else:
-            return "R$"
+        return True, price, amount
+    
+    # Searches for the selected item on items, that is the dictionary with "item" objects
+    def _get_item(self, item):
+        for target_item in self.items:
+            if item == target_item.name:
+                return target_item 
+        
     
     def add_purchase(self):
         
         item = self.entry_item.get()
-        price = self.entry_price.get()
-        amount = self.entry_amount.get()
+        currency = self.currency_var.get()
         
-        valid, price = self._verify_input(item, price, amount)
+        valid, price, amount = self._verify_input(item, self.entry_price.get(), self.entry_amount.get())
         if not valid:
             return
-        currency_symbol = self._get_currency()
-
-        # chama no main.py e printa o retornado
-        self.text_output.insert("end", f"\n-> Purchase Added: {item} - {currency_symbol}{price:.2f} x {amount}")
+        
+        target_item = self._get_item(item)
+        status = target_item.record_purchase(price, amount, currency)
+        if status:
+            self.text_output.insert("end", f"{status}")
+            
         self.entry_price.delete(0, "end")
         self.entry_amount.delete(0, "end")
-
 
     def add_sale(self):
         
         item = self.entry_item.get()
-        price = self.entry_price.get()
-        amount = self.entry_amount.get()
+        currency = self.currency_var.get()
         
-        valid, price = self._verify_input(item, price, amount)
+        valid, price, amount = self._verify_input(item, self.entry_price.get(), self.entry_amount.get())
         if not valid:
             return
-        currency_symbol = self._get_currency()
-
-        self.text_output.insert("end", f"\n-> Sale Added: {item} - {currency_symbol}{price:.2f} x {amount}")
+        
+        target_item = self._get_item(item)
+        status = target_item.record_sale(price, amount, currency)
+        if status:
+            self.text_output.insert("end", status)
+            
         self.entry_price.delete(0, "end")
         self.entry_amount.delete(0, "end")
-
 

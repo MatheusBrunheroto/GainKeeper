@@ -1,0 +1,10 @@
+{
+    "names": {
+        "placeholder":{
+            "purchases": [{"amount": 0, "price": 0}],
+            "sales": [{"amount": 0, "price": 0}],
+            "currency" : "not_set",
+            "is_active" : 0
+        }
+    }
+}

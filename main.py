@@ -1,6 +1,6 @@
-import json
 import sys
-from interface import App, TransactionRecorder
+from interface import App, TransactionRecorder, ItemRegisterer
+from data_manager import DataManager
 
 # FAZER UM CONFIG FILE PRA SALVAR PREFERENCIAS, LER ELE ANTES TAMBEM
 """
@@ -46,181 +46,15 @@ dict["names"] -> "First Item Name":{"purchases": [{...}, {...}], "sales": [{...}
     -   -   dict["names"]["Second Item Name"]["purchases"][2]["price"] -> PRICE3
     ...
 """
-def read_json():
-    
-    try:
-        
-        with open("data2.json") as f:
-            raw = f.read()
-            
-        if raw:
-            
-            with open("backup_data.json", "w", encoding="utf-8") as file:
-                file.write("x")
-            DATA = json.loads(raw)
-            # DUPLICA PRO BACKUP
-            
-            # Create Instances #
-            items = []  # Instance List
-            for name in DATA["names"]: 
-                item = Item(name, DATA["names"][name])
-                items.append(item)
-            return items    # Returns to Main()
 
 
-        else:
-            # PRIMEIRA VEZ, adiciona dicionario vazio
-            print("The \"data.json\" file is empty!")
-            
-        # transofmra em objeto
-        
-        
-    except Exception as e:
-        
-        print(f"Failed to find \"dict.json\"! ({e})...")
-        # CRIA SE NAO EXISTIR
-        sys.exit("\"dict.json\" was created!")
-        
-        
-        # by now data2 is writing in data
-def write_json(items):
-    
-    # Creates the New Dictionary #
-    dictionary = {"names": {}}
-    for item in items:
-        dictionary["names"][item.name] = {
-            "purchases": [
-                {"price": price, "amount": amount}
-                for price, amount in item.purchase_prices
-            ],
-            "sales": [
-                {"price": price, "amount": amount}
-                for price, amount in item.sale_prices
-            ]
-        }
-        
-    # Write the new data in data.json, in the same way it was read before
-    with open("data.json", "w", encoding="utf-8") as file:
-        json.dump(dictionary, file, indent=4, separators=(",", ": "), ensure_ascii=False)
-    
     
    
    
-class Item:
-    
-    # Converting the dictionary entry into an object, with easily accessible attributes for purchases, sales, and financial metrics #
-    def __init__(self, name: str, data: dict):
-        
-        self.name = name
-        
-        ## Purchase Variables ##
-        self.purchase_prices = []                    # purchase_prices[N][{Price, Amount}]
-        self.total_purchase_price = 0                # total_purchase_price += purchase_prices[0 .. N][0] * purchase_prices[0 .. N][1
-        self.total_purchase_amount = 0               # total_purchase_amount += purchase_prices[0 .. N][1]
-        self.average_purchase_price = 0              # average_purchase_price = total_purchase_price / total_purchase_amoun
-        
-        ## Sale Variables (Same Idea from the Purchase Variables) ## 
-        self.sale_prices = []                        # sale_prices[N][{Price, Amount}]
-        self.total_sale_price = 0
-        self.total_sale_amount = 0
-        self.average_sale_price = 0
-        
-        self.remaining_amount = 0
-        self.estimated_profit = 0                    # estimated_profit = total_sale_price - (average_purchase_price * total_sale_amount)
-        self.taxed_estimated_profit = 0              # taxed_estimated_profit = (total_sale_price * 0.98) - (average_purchase_price * total_sale_amount)
-        self.estimated_ROI = 0                       # estimated_ROI = taxed_estimated_profit * 100 / total_purchase_price
-        
-        
-        purchase = data["purchases"]
-        for p in purchase:
-            self.purchase_prices.append([p["price"], p["amount"]])
-            self.total_purchase_price += p["price"] * p["amount"]
-            self.total_purchase_amount += p["amount"]        
-        if self.total_purchase_amount > 0:  # Avoid division by 0
-            self.average_purchase_price = self.total_purchase_price / self.total_purchase_amount
 
-        ## Repeat the exact same proccess, but for sales ##
-        sale = data["sales"]
-        for s in sale:
-            self.sale_prices.append([s["price"], s["amount"]])
-            self.total_sale_price += s["price"] * s["amount"]
-            self.total_sale_amount += s["amount"]    
-        if self.total_sale_amount > 0: 
-            self.average_sale_price = self.total_sale_price / self.total_sale_amount
+        
 
 
-        self._update_financial_metrics()
-        
-        
-
-    def potential_profit(self, current_price):
-        return 1
-    
-    
-    
-    def _update_financial_metrics(self):
-
-        # Stock # RISCO DE ALGUEM COLOCAR SALE > AMOUNT, corrigir isso no record_sale, na hora de verificar o total sale amount
-        self.remaining_amount = self.total_purchase_amount - self.total_sale_amount
-        
-        # Financial Performance Metrics # 
-        self.estimated_profit = self.total_sale_price - (self.average_purchase_price * self.total_sale_amount)
-        self.taxed_estimated_profit = (self.total_sale_price * 0.98) - (self.average_purchase_price * self.total_sale_amount)
-        self.estimated_ROI = self.taxed_estimated_profit * 100 / self.total_purchase_price
-    
-
-    
-    # Searches if the price already exists; if so, its amount is increased. Otherwise, a new price entry is added with the given amount. 
-    def record_purchase(self, price, amount):
-        
-        price_found = False
-        for i in range(len(self.purchase_prices)):
-            if self.purchase_prices[i][0] == price:
-                self.purchase_prices[i][1] += amount
-                price_found = True
-                break
-        if price_found == False:
-            self.purchase_prices.append([price, amount])
-        
-        # Recalculates important data #
-        self.total_purchase_price += price * amount
-        self.total_purchase_amount += amount
-        self.average_purchase_price = self.total_purchase_price / self.total_purchase_amount
-        self._update_financial_metrics()
-    
-    
-    # Same idea as record_purchase()
-    def record_sale(self, price, amount):
-        
-        # Avoiding negative stock
-        if amount > remaining_amount:
-            return f"Specified amount ({amount}x) is higher than your stock ({remaining_amount}x)!"
-            
-        price_found = False
-        for i in range(len(self.sale_prices)):
-            if self.sale_prices[i][0] == price:
-                self.sale_prices[i][1] += amount
-                price_found = True
-                break
-        if price_found == False:
-            self.sale_prices.append([price, amount])
-            
-        self.total_sale_price += price * amount
-        self.total_sale_amount += amount
-        self.average_sale_price = self.total_sale_price / self.total_sale_amount
-        self._update_financial_metrics()
-        
-        if amount == 1:
-            return f"Successfully recorded sale: {amount} unit of \"{self.name}\" at ${price:.2f}. Updated total sold: {self.total_sale_amount} units."
-        else:
-            return f"Successfully recorded sale: {amount} units of \"{self.name}\" at ${price:.2f} each. Updated total sold: {self.total_sale_amount} units."
-        
-        
-        
-
-def menu():
-    return 1
-        
         
         
         
@@ -228,7 +62,8 @@ def menu():
         
 if __name__ == "__main__":
     
-    items = read_json()
+    data_manager = DataManager()
+    items = data_manager.read_json()    # List of objects
     
     """ It's mandatory to have the "items" defined before calling App(), because it could be an empty value and
         mess up the "SELECT ITEM" option, because it uses "values=[item.name for item in self.items]", and
@@ -256,8 +91,9 @@ if __name__ == "__main__":
             print(f"  Estimated Profit: {item.taxed_estimated_profit}")
             print(f"  Estimated ROI: {item.estimated_ROI:.2f}%")
             print("-" * 40)"""
-        
-    write_json(items)
+    for item in items:
+        print(item.name)
+    data_manager.write_json(items)
 
 
    # fazer um arquivo com a data que itens foram adicionados, lucro, etc... pra fazer o grafico
