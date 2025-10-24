@@ -1,3 +1,5 @@
+
+
 class Item:
     
     # Converting the dictionary entry into an object, with easily accessible attributes for purchases, sales, and financial metrics #
@@ -25,6 +27,7 @@ class Item:
         
         self.remaining_amount = 0
         self.estimated_profit = 0                    # estimated_profit = total_sale_price - (average_purchase_price * total_sale_amount)
+        self.worst_profit = 0
         self.taxed_estimated_profit = 0              # taxed_estimated_profit = (total_sale_price * 0.98) - (average_purchase_price * total_sale_amount)
         self.estimated_ROI = 0                       # estimated_ROI = taxed_estimated_profit * 100 / total_purchase_price
         
@@ -47,10 +50,41 @@ class Item:
             self.total_sale_amount += s["amount"]    
         if self.total_sale_amount > 0: 
             self.average_sale_price = self.total_sale_price / self.total_sale_amount
-            
+        
         self._update_financial_metrics()
         
+    """ The purchased_prices is in decrescent order, and the sale_prices are in crescent order.
+        Relating the most expensive purchases with the cheapest sales.
         
+        if I bought {"price": 30, "amount": 20}, {"price": 20, "amount": 40} 
+            and sold {"price": 100, "amount": 30}, {"price": 110, "amount": 10}
+        
+        It's necessary, if stock != 0, to calculate how much the total sold amount is related with the worst possible buys
+        
+            Total Sold                  -              Total Bought
+            [($100 * 30) + ($110 * 10)] - [($30 * 20) + ($20 * 20)]
+            = ($3000 + $1100) - ($600 + $400)
+            = $4100 - $1000
+            = $3100 <- WORST PROFIT POSSIBLE
+        
+        *** In the case of a best profit, it would be ($20 * 40) in Total Bought. ***
+    """
+    def _worst_profit(self):
+        
+        amount = self.total_sale_amount
+        expensive_purchases = 0
+        i = 0
+        while amount > 0:      
+            # If it's bigger than amount, just use the entire current dictionary amount 
+            if  amount > self.purchase_prices[i][1]:
+                expensive_purchases += self.purchase_prices[i][1] * self.purchase_prices[i][0]
+                amount -= self.purchase_prices[i][1]
+                i += 1
+            else:
+                expensive_purchases += amount * self.purchase_prices[i][0]
+                amount = 0
+        print(self.total_sale_price * self.total_sale_amount - expensive_purchases)
+        return (self.total_sale_price * self.total_sale_amount) - expensive_purchases
 
     def potential_profit(self, current_price):
         return 1
@@ -71,13 +105,16 @@ class Item:
         # Stock #        
         self.remaining_amount = self.total_purchase_amount - self.total_sale_amount
         
+        if self.remaining_amount > 0 and self.total_sale_amount != 0:
+            self.worst_profit = self._worst_profit()
+        
         # Financial Performance Metrics # 
         if self.total_sale_amount > 0:
             self.estimated_profit = self.total_sale_price - (self.average_purchase_price * self.total_sale_amount)
             self.taxed_estimated_profit = (self.total_sale_price * 0.98) - (self.average_purchase_price * self.total_sale_amount)
         if self.total_purchase_price > 0:
             self.estimated_ROI = self.taxed_estimated_profit * 100 / self.total_purchase_price
-        
+
 
     def _get_currency(self, currency):
         if currency == "USD":
@@ -86,6 +123,8 @@ class Item:
             return '¥'
         else:
             return "R$"
+        
+        
         
     # Searches if the price already exists; if so, its amount is increased. Otherwise, a new price entry is added with the given amount. 
     # "zero" inputs are being handled by interface.py
@@ -102,12 +141,14 @@ class Item:
             self.purchase_prices.append([price, amount, currency])
         
         # Recalculates important data #
-        self._clear_zeros(price, amount, currency)
+        
         self.total_purchase_price += price * amount
         self.total_purchase_amount += amount
         self.average_purchase_price = self.total_purchase_price / self.total_purchase_amount
         
         self._update_financial_metrics()
+        self._clear_zeros(price, amount, currency)
+        self.purchase_prices = sorted(self.purchase_prices, key=lambda x: x[0], reverse=True)
         
         currency_symbol = self._get_currency(currency)
         if amount == 1:
@@ -116,11 +157,7 @@ class Item:
         else:
             return (f"[+] Purchase Recorded: {amount} units of \"{self.name}\" at {currency_symbol}{price:.2f} each.\n"
                     f"-> Updated total bought: {self.total_purchase_amount} units.\n")
-
-    
-    
-    
-    
+        
     
     # Same idea as record_purchase()
     def record_sale(self, price, amount, currency):
@@ -143,13 +180,17 @@ class Item:
         self.total_sale_amount += amount
         self.average_sale_price = self.total_sale_price / self.total_sale_amount
         
-        self._clear_zeros(price, amount, currency)
+        
         self._update_financial_metrics()
+        self._clear_zeros(price, amount, currency)
+        self.sale_prices = sorted(self.sale_prices, key=lambda x: x[0])
         
         currency_symbol = self._get_currency(currency)
         if amount == 1:
-            return f"Successfully recorded sale: {amount} unit of \"{self.name}\" at {currency_symbol}{price:.2f}. Updated total sold: {self.total_sale_amount} units.\n"
+            return (f"[+] Sale Recorded: {amount} unit of \"{self.name}\" at {currency_symbol}{price:.2f}.\n"
+                    f"-> Updated total bought: {self.total_sale_amount} units.\n")
         else:
-            return f"Successfully recorded sale: {amount} units of \"{self.name}\" at {currency_symbol}{price:.2f} each. Updated total sold: {self.total_sale_amount} units.\n"
+            return (f"[+] Sale Recorded: {amount} units of \"{self.name}\" at {currency_symbol}{price:.2f} each.\n"
+                    f"-> Updated total bought: {self.total_sale_amount} units.\n")
         
         

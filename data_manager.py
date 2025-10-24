@@ -43,9 +43,9 @@ class DataManager:
             return self._create_instances()
         
         # If it doesn't exist, creates and 
-        except:
-            
-            print("The \"data.json\" file doesn't exist!\n Creating Generic \"data.json\"...")
+        except Exception as e:
+            print(e)
+            print("The \"data.json\" file doesn't exist!\nCreating Generic \"data.json\"...")
             with open("data.json", "w", encoding="utf-8") as file:
                 pass
             

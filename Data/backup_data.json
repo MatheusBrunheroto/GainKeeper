@@ -1,0 +1,308 @@
+{
+    "names": {
+        "Sticker | Metizport (Foil) | Austin 2025": {
+            "purchases": [
+                {
+                    "price": 0.6,
+                    "amount": 2,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 0.61,
+                    "amount": 66,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 0.62,
+                    "amount": 10,
+                    "currency": "BRL"
+                }
+            ],
+            "sales": [
+                {
+                    "price": 0.11,
+                    "amount": 78,
+                    "currency": "USD"
+                }
+            ],
+            "is_active": 0
+        },
+        "Sticker | Complexity Gaming (Holo) | Austin 2025": {
+            "purchases": [
+                {
+                    "price": 42.63,
+                    "amount": 1,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 42.1,
+                    "amount": 1,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 8.59,
+                    "amount": 1,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [
+                {
+                    "price": 14.88,
+                    "amount": 1,
+                    "currency": "USD"
+                },
+                {
+                    "price": 22.53,
+                    "amount": 1,
+                    "currency": "USD"
+                }
+            ],
+            "is_active": 1
+        },
+        "Austin 2025 Legends Sticker Capsule": {
+            "purchases": [
+                {
+                    "price": 1.45,
+                    "amount": 40,
+                    "currency": "BRL"
+                }
+            ],
+            "sales": [
+                {
+                    "price": 0.43,
+                    "amount": 20,
+                    "currency": "USD"
+                },
+                {
+                    "price": 0.41,
+                    "amount": 20,
+                    "currency": "USD"
+                }
+            ],
+            "is_active": 0
+        },
+        "Austin 2025 Challengers Sticker Capsule": {
+            "purchases": [
+                {
+                    "price": 1.45,
+                    "amount": 39,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 0.45,
+                    "amount": 10,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [
+                {
+                    "price": 0.42,
+                    "amount": 16,
+                    "currency": "USD"
+                },
+                {
+                    "price": 0.6,
+                    "amount": 10,
+                    "currency": "USD"
+                },
+                {
+                    "price": 0.52,
+                    "amount": 22,
+                    "currency": "USD"
+                },
+                {
+                    "price": 1.36,
+                    "amount": 1,
+                    "currency": "BRL"
+                }
+            ],
+            "is_active": 0
+        },
+        "Austin 2025 Contenders Sticker Capsule": {
+            "purchases": [
+                {
+                    "price": 1.45,
+                    "amount": 40,
+                    "currency": "BRL"
+                }
+            ],
+            "sales": [
+                {
+                    "price": 0.65,
+                    "amount": 15,
+                    "currency": "USD"
+                },
+                {
+                    "price": 0.58,
+                    "amount": 10,
+                    "currency": "USD"
+                },
+                {
+                    "price": 0.42,
+                    "amount": 15,
+                    "currency": "USD"
+                }
+            ],
+            "is_active": 0
+        },
+        "Gallery Case": {
+            "purchases": [
+                {
+                    "price": 7.86,
+                    "amount": 2,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 7.55,
+                    "amount": 3,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 1.5,
+                    "amount": 15,
+                    "currency": "USD"
+                },
+                {
+                    "price": 1.24,
+                    "amount": 1,
+                    "currency": "USD"
+                },
+                {
+                    "price": 1.26,
+                    "amount": 3,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [],
+            "is_active": 1
+        },
+        "Recoil Case": {
+            "purchases": [
+                {
+                    "price": 0.39,
+                    "amount": 99,
+                    "currency": "USD"
+                },
+                {
+                    "price": 0.36,
+                    "amount": 1,
+                    "currency": "USD"
+                },
+                {
+                    "price": 2.66,
+                    "amount": 4,
+                    "currency": "BRL"
+                }
+            ],
+            "sales": [],
+            "is_active": 1
+        },
+        "Snakebite Case": {
+            "purchases": [
+                {
+                    "price": 0.59,
+                    "amount": 59,
+                    "currency": "USD"
+                },
+                {
+                    "price": 0.61,
+                    "amount": 16,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [
+                {
+                    "price": 0.66,
+                    "amount": 75,
+                    "currency": "USD"
+                }
+            ],
+            "is_active": 0
+        },
+        "MAC-10 | Tatter": {
+            "purchases": [
+                {
+                    "price": 14.0,
+                    "amount": 1,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [],
+            "is_active": 1
+        },
+        "M4A4 | Desolate Space": {
+            "purchases": [
+                {
+                    "price": 8.98,
+                    "amount": 1,
+                    "currency": "USD"
+                },
+                {
+                    "price": 25.65,
+                    "amount": 1,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [],
+            "is_active": 1
+        },
+        "Dreams & Nightmares Case": {
+            "purchases": [
+                {
+                    "price": 1.55,
+                    "amount": 6,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [],
+            "is_active": 1
+        },
+        "Sticker | Aurora (Foil) | Austin 2025": {
+            "purchases": [
+                {
+                    "price": 1.47,
+                    "amount": 29,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 1.44,
+                    "amount": 4,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 1.49,
+                    "amount": 10,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 1.46,
+                    "amount": 4,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 1.45,
+                    "amount": 3,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 1.41,
+                    "amount": 17,
+                    "currency": "BRL"
+                },
+                {
+                    "price": 0.27,
+                    "amount": 1,
+                    "currency": "USD"
+                }
+            ],
+            "sales": [
+                {
+                    "price": 0.23,
+                    "amount": 23,
+                    "currency": "USD"
+                }
+            ],
+            "is_active": 1
+        }
+    }
+}

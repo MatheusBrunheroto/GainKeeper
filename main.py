@@ -1,6 +1,7 @@
 import sys
 from interface import App, TransactionRecorder, ItemRegisterer
 from data_manager import DataManager
+# from inventory import Inventory
 
 # FAZER UM CONFIG FILE PRA SALVAR PREFERENCIAS, LER ELE ANTES TAMBEM
 """
@@ -17,7 +18,7 @@ The dict.json file is structured in the following way:
         "Second Item Name":{
             "purchases": [  {"amount": AMOUNT1, "price": PRICE1},
                             {"amount": AMOUNT2, "price": PRICE2},
-                            {"amount": AMOUNT3, "price": PRICE3}   ],
+                            {"amount": AMOUNT3, "price": PRICE3}   ],1,46
             "sales": [  {"amount": AMOUNT1, "price": PRICE1}   ]
         }
         ...
@@ -51,14 +52,13 @@ dict["names"] -> "First Item Name":{"purchases": [{...}, {...}], "sales": [{...}
 if __name__ == "__main__":
     
     data_manager = DataManager()
-    items = data_manager.read_json()    # List of objects
+    items = data_manager.read_json()    # List of objects, returned by read_json()
+    # inventory = Inventory(items)
     
     """ It's mandatory to have the "items" defined before calling App(), because it could be an empty value and
         mess up the "SELECT ITEM" option, because it uses "values=[item.name for item in self.items]", and
         if there is no object with parameter "name", it won't work """
-        # É MESMO? talvez definir lista dict com try e except
         
-        # A CADA ADIÇÃO EU TERIA QUE LER A LISTA AO VIVO PRA MANTER LÁ, 
 
     app = App(items)
     app.mainloop()
