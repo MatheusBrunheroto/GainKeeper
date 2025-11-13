@@ -1,4 +1,4 @@
-import sys
+
 from interface.interface_main import App, TransactionRecorder, ItemRegisterer
 from data_manager import DataManager
 # from inventory import Inventory

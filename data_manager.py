@@ -1,5 +1,6 @@
 import json
-from item import Item
+import sys
+from stock.item import Item
 
 class DataManager:
     
@@ -20,7 +21,7 @@ class DataManager:
     def _generic_json(self):
         
         try:
-            with open("generic_data.json", "r", encoding="utf-8") as file:
+            with open("./data/generic_data.json", "r", encoding="utf-8") as file:
                 self.raw = file.read()
   
         except Exception as e:
@@ -31,7 +32,7 @@ class DataManager:
         
         try:      
             # Try to retreive data.json
-            with open("data.json", "r", encoding="utf-8") as file:
+            with open("./data/data.json", "r", encoding="utf-8") as file:
                 self.raw = file.read()
             
             # If it exists and is empty, create a generic version, so it can run the code
@@ -46,7 +47,7 @@ class DataManager:
         except Exception as e:
             print(e)
             print("The \"data.json\" file doesn't exist!\nCreating Generic \"data.json\"...")
-            with open("data.json", "w", encoding="utf-8") as file:
+            with open("./data/data.json", "w", encoding="utf-8") as file:
                 pass
             
             self._generic_json()
@@ -72,6 +73,6 @@ class DataManager:
             }
             
         # Write the new data in data.json, in the same way it was read before
-        with open("data2.json", "w", encoding="utf-8") as file:
+        with open("./data/data2.json", "w", encoding="utf-8") as file:
             json.dump(dictionary, file, indent=4, separators=(",", ": "), ensure_ascii=False)
         
