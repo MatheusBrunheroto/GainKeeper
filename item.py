@@ -1,10 +1,11 @@
 
 
 class Item:
-    
+    # CRIAR UM SELF, COM OS PREÇOS CONVERTIDOS, E UM SEM CONVERTER. OS CONVERTIDOS SERAO OS USADOS PRA CONTAS, E OS NAO CONVERTIDOS SERAO USADOS PARA SALVAR
     # Converting the dictionary entry into an object, with easily accessible attributes for purchases, sales, and financial metrics #
     def __init__(self, name: str, data: dict):
         
+        # EU SEI QUE TEM PROBLEMA AQUI AINDA
         self.is_first_purchase = False 
         self.is_first_sale = False     
         if data == {'purchases': [{'price': 0, 'amount': 0, 'currency': 0}],'sales': [{'price': 0, 'amount': 0, 'currency': 0}],'is_active': 0}:

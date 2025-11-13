@@ -1,5 +1,5 @@
 import sys
-from interface import App, TransactionRecorder, ItemRegisterer
+from interface.interface_main import App, TransactionRecorder, ItemRegisterer
 from data_manager import DataManager
 # from inventory import Inventory
 
@@ -47,7 +47,7 @@ dict["names"] -> "First Item Name":{"purchases": [{...}, {...}], "sales": [{...}
     -   -   dict["names"]["Second Item Name"]["purchases"][2]["price"] -> PRICE3
     ...
 """
-        
+        # Criar tela para ativar / desativar
         # FILTRAR O IS ACTIVE NO INTERFACE, PRA A PARECER OU NAO. CRIAR UM LUGAR COM UMA LISTA DOS ITEM NAO ATIVOS, USAR ELES NO GRAFICO MESMO ASSIM
 if __name__ == "__main__":
     

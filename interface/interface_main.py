@@ -51,14 +51,15 @@ class App(ctk.CTk):
         self.text_output = ctk.CTkTextbox(self.right_frame, width=500, height=500)
         self.text_output.pack(padx=10, pady=10, fill="both", expand=True)
         self.text_output.insert("0.0", "Log initialized...\n")
-        
+        self.text_output.tag_config("1", foreground="orange")
+        self.text_output.tag_config("2", foreground="red")
         
         self.item_registerer = ItemRegisterer(self.left_frame, self.items, self.text_output)
         
         self.transaction_recorder = TransactionRecorder(self.left_frame, self.items, self.text_output)
         # Reference of "transaction_recorder" inside of "item_registerer", so "item_registerer" can update the list in "transaction_recorder"
         self.item_registerer.transaction_recorder = self.transaction_recorder
-     
+        self.text_output.configure(state="normal")
 
     def clear_log(self):
         self.text_output.delete("0.0", "end")
@@ -112,6 +113,9 @@ class ItemRegisterer:
 # CRIAR O OBJETO STOCK QUE VAI GUARDAR DADOS GERAIS
 
 
+
+
+
 class TransactionRecorder:
     
     def __init__(self, parent, items, text_output):
@@ -133,7 +137,7 @@ class TransactionRecorder:
             
         # Select Item Option Menu
         optionmenu_var = ctk.StringVar(value="Select Registered Item")
-        self.entry_item = ctk.CTkOptionMenu(self.record_frame, values=[item.name for item in self.items], variable=optionmenu_var) # Output from items.name
+        self.entry_item = ctk.CTkOptionMenu(self.record_frame, values=[item.name for item in self.items], variable=optionmenu_var, command=self.item_overview) # Output from items.name
         self.entry_item.grid(row=1, column=0, padx=10, pady=5, columnspan=2, sticky="ew")
         
         # Amount and Price Input
@@ -239,3 +243,31 @@ class TransactionRecorder:
         self.entry_price.delete(0, "end")
         self.entry_amount.delete(0, "end")
 
+    def item_overview(self, option):
+        
+        self.text_output.configure(state="normal")
+        self.text_output.delete("0.0", "end")
+        
+        target_item = self._get_item(option)
+        
+        self.text_output.insert("end", f"{option} - ")
+        if target_item.remaining_amount == 0:
+            self.text_output.insert("end", "(Not in Stock)", "1")
+        else:
+            self.text_output.insert("end", f"x{target_item.remaining_amount} (CURRENT PRICE)")
+        self.text_output.insert("end",":\n")    
+        
+        self.text_output.insert("end", f"│\n├── Purchases: x{target_item.total_purchase_amount} Units (≈ {target_item.average_purchase_price:.2f} each)\n")
+        self.text_output.insert("end", f"│        ├── Total Purchase Price = {target_item.total_purchase_price:.2f}\n")
+        
+        if target_item.total_sale_amount == 0:
+            self.text_output.insert("end", "\nNot enough data to calculate ROI", "1")
+        else:
+            self.text_output.insert("end", f"├── Sales: x{target_item.total_sale_amount} Units (≈ {target_item.average_sale_price:.2f} each)\n")
+            self.text_output.insert("end", f"│        ├── Total Purchase Price = {target_item.total_sale_price:.2f}\n")
+        
+        
+        self.text_output.configure(state="disabled")
+        
+        
+        # self.text_output.insert("end", f"x{target_item.total_purchase_amount} Units (≈ {target_item.average_purchase_price:.2f} each)\n")

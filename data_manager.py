@@ -72,6 +72,6 @@ class DataManager:
             }
             
         # Write the new data in data.json, in the same way it was read before
-        with open("data.json", "w", encoding="utf-8") as file:
+        with open("data2.json", "w", encoding="utf-8") as file:
             json.dump(dictionary, file, indent=4, separators=(",", ": "), ensure_ascii=False)
         
