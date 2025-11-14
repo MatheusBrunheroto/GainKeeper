@@ -17,11 +17,11 @@ class Log:
         self.label_log.pack(pady=10)
 
         
-        self.text_output = ctk.CTkTextbox(self.parent, width=500, height=450)
-        self.text_output.rowconfigure(1, weight=0)
-        # self.text_output.pack(padx=10, pady=10, fill="both", expand=True)
+        self.text_output = ctk.CTkTextbox(self.parent, width=500, height=462)
+
+        self.text_output.pack(padx=10, pady=(10, 5), fill="both", expand=True)
         self.text_output.insert("0.0", "Log initialized...\n\n")
-        self.text_output.pack(padx=10, pady=10, fill="both", expand=True)
+        self.text_output.pack(padx=10, pady=(10, 5), fill="both", expand=True)
         self.text_output.tag_config("bad", foreground="red")
         self.text_output.tag_config("good", foreground="green")
         self.text_output.tag_config("neutral", foreground="orange")

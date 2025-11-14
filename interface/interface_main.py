@@ -7,9 +7,9 @@ from interface.transaction_recorder import TransactionRecorder
 from interface.log import Log
 from interface.currency_conversor import CurrencyConversor
 
+
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
-
 class App(ctk.CTk):
     
     def __init__(self, items):
@@ -28,8 +28,7 @@ class App(ctk.CTk):
         self.main_frame.pack(padx=20, pady=10, fill="both", expand=True)
         self.main_frame.columnconfigure(0, weight=0)  # Esquerda - conteúdo fixo
         self.main_frame.columnconfigure(1, weight=1)  # Direita - expansível
-        self.main_frame.rowconfigure(1, weight=0)
-        
+
    # Columns amount
         # Três linhas na coluna esquerda (ajuste conforme necessário)
 
@@ -37,16 +36,16 @@ class App(ctk.CTk):
         self.left_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.left_frame.grid(row=0, column=0, padx=10, pady=10, sticky="n")
         
-        
-        # ====== FRAMES ESQUERDA ====== #
-        
 
 
         # ====== FRAME DIREITO (LOG / OUTPUT) ====== #
         self.right_frame = ctk.CTkFrame(self.main_frame)
         self.right_frame.grid(row=0, column=1, padx=20, pady=20, sticky="nsew")
+        self.right_frame.rowconfigure(1, weight=1)
+        
+        
         self.log = Log(self.right_frame, self.items)
-        self.currency_selector = CurrencyConversor(self.right_frame)
+        self.currency_conversor = CurrencyConversor(self.right_frame, self.items)
         
         self.item_registerer = ItemRegisterer(self.left_frame, self.items, self.log.text_output)
         self.transaction_recorder = TransactionRecorder(self.left_frame, self.items, self.log.text_output)
@@ -55,9 +54,6 @@ class App(ctk.CTk):
         self.item_registerer.transaction_recorder = self.transaction_recorder
         
 
-    def clear_log(self):
-        self.text_output.delete("0.0", "end")
-        self.text_output.insert("0.0", "Log cleared...\n")
 
 
 
